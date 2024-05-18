@@ -26,7 +26,7 @@ public class DBRepository : MonoBehaviour
             return _instance;
         }
     }
-
+    private Queue<IDictionary> qq = new Queue<IDictionary>();
     DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     string loginUserID;
     // Start is called before the first frame update
@@ -51,7 +51,14 @@ public class DBRepository : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (qq.Count > 0)
+        {
+            IDictionary rank = qq.Dequeue();
+            Debug.Log(rank["FITMOS"]);
+            TitleSingleManager.Instance.setTitle((long)rank["FE_first_use"], (long)rank["T_Fire_fighter"], (long)rank["FE_use"], (long)rank["FE_all_use"], (long)rank["first_bucket"], (long)rank["bucket_success"], (long)rank["handkerchief_use"], (long)rank["swift_evacuation"], (long)rank["safe_evacuation"], (long)rank["FITMOS"]);
+            string json = JsonUtility.ToJson(TitleSingleManager.Instance);
+            Debug.Log(json);
+        }
     }
     public void checkTitle()
     {
@@ -87,7 +94,8 @@ public class DBRepository : MonoBehaviour
                     if (userId == data.Key)
                     {
                         IDictionary rank = (IDictionary)data.Value;
-                        TitleSingleManager.Instance.setTitle((long)rank["FE_first_use"], (long)rank["T_Fire_fighter"], (long)rank["FE_use"], (long)rank["FE_all_use"], (long)rank["first_bucket"], (long)rank["bucket_success"], (long)rank["handkerchief_use"], (long)rank["swift_evacuation"], (long)rank["safe_evacuation"], (long)rank["FITMOS"]);
+                        Debug.Log(rank["FITMOS"]);
+                        qq.Enqueue(rank);
                     }
 
                 }

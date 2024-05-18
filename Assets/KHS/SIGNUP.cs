@@ -91,10 +91,14 @@ public class SGINUP : MonoBehaviour
 
     public void onSingup()
     {
+        if(CHECK.text != passField.text){
+            qq.Enqueue("회원가입실패");
+            return;
+        }
         auth.CreateUserWithEmailAndPasswordAsync(emailField.text, passField.text).ContinueWith(
         task =>
         {
-            if (!task.IsCanceled && !task.IsFaulted && CHECK.text == passField.text)
+            if (!task.IsCanceled && !task.IsFaulted)
             {
                 Debug.Log(task.Result.User.UserId);
                 Debug.Log(emailField.text + "로 회원가입\n");
@@ -104,7 +108,7 @@ public class SGINUP : MonoBehaviour
             else
             {
                 Debug.Log("회원가입 실패\n");
-                qq.Enqueue("회원가입 실패");
+                qq.Enqueue("회원가입실패");
             }
         });
     }
@@ -112,6 +116,10 @@ public class SGINUP : MonoBehaviour
     void onpopup()
     {
         popup.gameObject.SetActive(true);
+    }
+
+    public void offpopup(){
+        popup.gameObject.SetActive(false);
     }
 
     public void loadLogin()

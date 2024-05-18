@@ -22,20 +22,20 @@ public class GameMenu: MonoBehaviour
         
          if (user != null) {
                    LoginButton.gameObject.SetActive(false);
-            foreach (var profile in user.ProviderData) {
-              // Id of the provider (ex: google.com)
-           string  providerId = profile.ProviderId;
-            string uid = profile.UserId;
-             Debug.Log(uid);
-                 string name = profile.DisplayName;
-        string email = profile.Email;
+        //     foreach (var profile in user.ProviderData) {
+        //       // Id of the provider (ex: google.com)
+        //    string  providerId = profile.ProviderId;
+        //     string uid = profile.UserId;
+        //      Debug.Log(uid);
+        //          string name = profile.DisplayName;
+        // string email = profile.Email;
 
-        Debug.Log(providerId);
-            Debug.Log(name);
-                Debug.Log(email);
+        // Debug.Log(providerId);
+        // Debug.Log(name);
+        // Debug.Log(email);
     
        
-  }
+  // }
     }
     else{
 
@@ -50,7 +50,6 @@ public class GameMenu: MonoBehaviour
     }
 
     public void onLogout(){
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
       auth.SignOut();
       LoginButton.gameObject.SetActive(true);
       LogoutButton.gameObject.SetActive(false);
@@ -62,5 +61,4 @@ public class GameMenu: MonoBehaviour
     public void goGame(){
       SceneManager.LoadScene("temp");
     }
-
 }
