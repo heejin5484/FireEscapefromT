@@ -17,7 +17,7 @@ public class GameMenu: MonoBehaviour
     void Start()
     {
   
-            auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         user = auth.CurrentUser;
         
          if (user != null) {
@@ -59,6 +59,6 @@ public class GameMenu: MonoBehaviour
       SceneManager.LoadScene("title");
     }
     public void goGame(){
-      SceneManager.LoadScene("temp");
+      SceneManager.LoadScene("testDB");
     }
 }

@@ -5,10 +5,19 @@ using Firebase;
 using Firebase.Database;
 
 
+public class Score{
+    long userId;
+    public Score(long score){
+        this.userId =score;
+    }
+}
+
 public class DBRepository : MonoBehaviour
 {
     // public static DBRepository Instance = null;
 
+    private Queue<IDictionary> qq = new Queue<IDictionary>();
+    DatabaseReference reference;
     private static DBRepository _instance;
     public static DBRepository Instance
     {
@@ -26,8 +35,6 @@ public class DBRepository : MonoBehaviour
             return _instance;
         }
     }
-    private Queue<IDictionary> qq = new Queue<IDictionary>();
-    DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     string loginUserID;
     // Start is called before the first frame update
     void Start()
@@ -46,6 +53,7 @@ public class DBRepository : MonoBehaviour
         // }
         // Instance = this;
         // UnityEngine.Object.DontDestoryOnLoad(gameObject);
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
         DontDestroyOnLoad(gameObject);
     }
     // Update is called once per frame
@@ -103,11 +111,13 @@ public class DBRepository : MonoBehaviour
         });
     }
 
-    public void saveDB()
+    public void saveDB(long score)
     {
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(loginUserID).SetRawJsonValueAsync(json);
+        // string scoreJson = JsonUtility.ToJson();
     }
 
     public void logoutTitleDB()
@@ -123,5 +133,45 @@ public class DBRepository : MonoBehaviour
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(userId).SetRawJsonValueAsync(json);
+        // Score score = new Score()
+        // string json = JsonUtility.ToJson(TitleSingleManager.Instance);
+    }
+
+    public void selectDate(){
+        DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Title");
+        Query titleQuery = tempreference.OrderByChild("FITMOS");
+        titleQuery.ValueChanged += HandleValueChanged;
+    }
+
+    void HandleValueChanged(object sender, ValueChangedEventArgs args) {
+      if (args.DatabaseError != null) {
+        Debug.LogError(args.DatabaseError.Message);
+        return;
+      }
+      if(args.Snapshot != null){
+        foreach(var recode in args.Snapshot.Children){
+            Debug.Log(recode.GetRawJsonValue());
+        }
+      }
+      // Do something with the data in args.Snapshot
+    }
+
+    public void testOrder(){
+        FirebaseDatabase.DefaultInstance.GetReference("Title").OrderByValue().GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            { // 성공적으로 데이터를 가져왔으면
+                DataSnapshot snapshot = task.Result;
+                // 데이터를 출력하고자 할때는 Snapshot 객체 사용함
+                Debug.Log(snapshot.GetRawJsonValue());
+
+                // foreach (DataSnapshot data in snapshot.Children)
+                // {
+                //     IDictionary rank = (IDictionary)data.Value;
+                //     Debug.Log("이름: " + rank["FITMOS"]);
+                //     // JSON은 사전 형태이기 때문에 딕셔너리 형으로 변환
+                // }
+            }
+        });
     }
 }
