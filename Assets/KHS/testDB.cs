@@ -7,8 +7,9 @@ public class testDB : MonoBehaviour
     // Start is called before the first frame update
     public void getTitle()
     {
-        DBRepository.Instance.testOrder();
+        // DBRepository.Instance.testOrder();
         DBRepository.Instance.selectDate();
+        DBRepository.Instance.selectRank();
     }
 
     public void getTestFireExtinguisher()

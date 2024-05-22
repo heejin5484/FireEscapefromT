@@ -5,10 +5,12 @@ using Firebase;
 using Firebase.Database;
 
 
-public class Score{
-    long userId;
-    public Score(long score){
-        this.userId =score;
+public class Score
+{
+    long score;
+    public Score(long score)
+    {
+        this.score = score;
     }
 }
 
@@ -17,6 +19,7 @@ public class DBRepository : MonoBehaviour
     // public static DBRepository Instance = null;
 
     private Queue<IDictionary> qq = new Queue<IDictionary>();
+    Firebase.Auth.FirebaseAuth auth;
     DatabaseReference reference;
     private static DBRepository _instance;
     public static DBRepository Instance
@@ -54,6 +57,7 @@ public class DBRepository : MonoBehaviour
         // Instance = this;
         // UnityEngine.Object.DontDestoryOnLoad(gameObject);
         reference = FirebaseDatabase.DefaultInstance.RootReference;
+        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         DontDestroyOnLoad(gameObject);
     }
     // Update is called once per frame
@@ -117,7 +121,7 @@ public class DBRepository : MonoBehaviour
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(loginUserID).SetRawJsonValueAsync(json);
-        // string scoreJson = JsonUtility.ToJson();
+        reference.Child("Score").Child(loginUserID).SetValueAsync(score);
     }
 
     public void logoutTitleDB()
@@ -137,26 +141,64 @@ public class DBRepository : MonoBehaviour
         // string json = JsonUtility.ToJson(TitleSingleManager.Instance);
     }
 
-    public void selectDate(){
+    public void selectRank()
+    {
+        DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Score");
+        Query titleQuery = tempreference.OrderByChild("score").LimitToFirst(10);
+        titleQuery.ValueChanged += HandleValueChanged2;
+    }
+
+    private async void HandleValueChanged2(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+        if (args.Snapshot != null)
+        {
+            Firebase.Auth.FirebaseUser user2;
+            foreach (var recode in args.Snapshot.Children)
+            {
+                Debug.Log(recode.Key);
+                // user2 = auth.GetUserAsync(recode.Key).Result;
+                // if (user2 != null)
+                // {
+                //     Debug.Log(user2);
+                //     string email = user2.Email;
+                //     Debug.Log(email);
+                // }
+                Debug.Log(recode.GetRawJsonValue());
+            }
+        }
+    }
+    public void selectDate()
+    {
         DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Title");
         Query titleQuery = tempreference.OrderByChild("FITMOS");
         titleQuery.ValueChanged += HandleValueChanged;
     }
 
-    void HandleValueChanged(object sender, ValueChangedEventArgs args) {
-      if (args.DatabaseError != null) {
-        Debug.LogError(args.DatabaseError.Message);
-        return;
-      }
-      if(args.Snapshot != null){
-        foreach(var recode in args.Snapshot.Children){
-            Debug.Log(recode.GetRawJsonValue());
+    void HandleValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
         }
-      }
-      // Do something with the data in args.Snapshot
+        if (args.Snapshot != null)
+        {
+
+            foreach (var recode in args.Snapshot.Children)
+            {
+                Debug.Log(recode.GetRawJsonValue());
+            }
+        }
+        // Do something with the data in args.Snapshot
     }
 
-    public void testOrder(){
+    public void testOrder()
+    {
         FirebaseDatabase.DefaultInstance.GetReference("Title").OrderByValue().GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCompleted)
