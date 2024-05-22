@@ -27,6 +27,7 @@ public class Login : MonoBehaviour
     //     }
     // }
 
+
     EventSystem system;
     [SerializeField] InputField emailField;
     [SerializeField] InputField passwordField;
@@ -118,6 +119,7 @@ public class Login : MonoBehaviour
             // qq.Enqueue("로그인성공");
             qq.Enqueue(result.User.UserId);
             SceneManager.LoadScene("GameMenu");
+            
         });
     }
 
