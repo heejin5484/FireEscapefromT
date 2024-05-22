@@ -33,6 +33,7 @@ public class Login : MonoBehaviour
     Firebase.Auth.FirebaseAuth auth;
     // Start is called before the first frame update
     [SerializeField] Button LoginButton;
+    
     private Queue<string> qq = new Queue<string>();
     public GameObject popup;
 
@@ -65,7 +66,7 @@ public class Login : MonoBehaviour
             else
             {
                 DBRepository.Instance.loginTitleDB(sstemp);
-                SceneManager.LoadScene("testDB");
+                SceneManager.LoadScene("GameMenu");
             }
         }
 

@@ -61,9 +61,7 @@ public class TitleSingleManager : MonoBehaviour
         this.swift_evacuation = swift_evacuation;
         this.safe_evacuation = safe_evacuation;
         this.FITMOS = FITMOS;
-
     }
-
 
     public void setFE_first_use()
     {

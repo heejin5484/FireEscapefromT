@@ -5,10 +5,22 @@ using Firebase;
 using Firebase.Database;
 
 
+public class Score
+{
+    long score;
+    public Score(long score)
+    {
+        this.score = score;
+    }
+}
+
 public class DBRepository : MonoBehaviour
 {
     // public static DBRepository Instance = null;
 
+    private Queue<IDictionary> qq = new Queue<IDictionary>();
+    Firebase.Auth.FirebaseAuth auth;
+    DatabaseReference reference;
     private static DBRepository _instance;
     public static DBRepository Instance
     {
@@ -26,8 +38,6 @@ public class DBRepository : MonoBehaviour
             return _instance;
         }
     }
-
-    DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     string loginUserID;
     // Start is called before the first frame update
     void Start()
@@ -46,12 +56,21 @@ public class DBRepository : MonoBehaviour
         // }
         // Instance = this;
         // UnityEngine.Object.DontDestoryOnLoad(gameObject);
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         DontDestroyOnLoad(gameObject);
     }
     // Update is called once per frame
     void Update()
     {
-
+        if (qq.Count > 0)
+        {
+            IDictionary rank = qq.Dequeue();
+            Debug.Log(rank["FITMOS"]);
+            TitleSingleManager.Instance.setTitle((long)rank["FE_first_use"], (long)rank["T_Fire_fighter"], (long)rank["FE_use"], (long)rank["FE_all_use"], (long)rank["first_bucket"], (long)rank["bucket_success"], (long)rank["handkerchief_use"], (long)rank["swift_evacuation"], (long)rank["safe_evacuation"], (long)rank["FITMOS"]);
+            string json = JsonUtility.ToJson(TitleSingleManager.Instance);
+            Debug.Log(json);
+        }
     }
     public void checkTitle()
     {
@@ -87,7 +106,8 @@ public class DBRepository : MonoBehaviour
                     if (userId == data.Key)
                     {
                         IDictionary rank = (IDictionary)data.Value;
-                        TitleSingleManager.Instance.setTitle((long)rank["FE_first_use"], (long)rank["T_Fire_fighter"], (long)rank["FE_use"], (long)rank["FE_all_use"], (long)rank["first_bucket"], (long)rank["bucket_success"], (long)rank["handkerchief_use"], (long)rank["swift_evacuation"], (long)rank["safe_evacuation"], (long)rank["FITMOS"]);
+                        Debug.Log(rank["FITMOS"]);
+                        qq.Enqueue(rank);
                     }
 
                 }
@@ -95,11 +115,13 @@ public class DBRepository : MonoBehaviour
         });
     }
 
-    public void saveDB()
+    public void saveDB(long score)
     {
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(loginUserID).SetRawJsonValueAsync(json);
+        reference.Child("Score").Child(loginUserID).SetValueAsync(score);
     }
 
     public void logoutTitleDB()
@@ -115,5 +137,83 @@ public class DBRepository : MonoBehaviour
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(userId).SetRawJsonValueAsync(json);
+        // Score score = new Score()
+        // string json = JsonUtility.ToJson(TitleSingleManager.Instance);
+    }
+
+    public void selectRank()
+    {
+        DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Score");
+        Query titleQuery = tempreference.OrderByChild("score").LimitToFirst(10);
+        titleQuery.ValueChanged += HandleValueChanged2;
+    }
+
+    private async void HandleValueChanged2(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+        if (args.Snapshot != null)
+        {
+            Firebase.Auth.FirebaseUser user2;
+            foreach (var recode in args.Snapshot.Children)
+            {
+                Debug.Log(recode.Key);
+                // user2 = auth.GetUserAsync(recode.Key).Result;
+                // if (user2 != null)
+                // {
+                //     Debug.Log(user2);
+                //     string email = user2.Email;
+                //     Debug.Log(email);
+                // }
+                Debug.Log(recode.GetRawJsonValue());
+            }
+        }
+    }
+    public void selectDate()
+    {
+        DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Title");
+        Query titleQuery = tempreference.OrderByChild("FITMOS");
+        titleQuery.ValueChanged += HandleValueChanged;
+    }
+
+    void HandleValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+        if (args.Snapshot != null)
+        {
+
+            foreach (var recode in args.Snapshot.Children)
+            {
+                Debug.Log(recode.GetRawJsonValue());
+            }
+        }
+        // Do something with the data in args.Snapshot
+    }
+
+    public void testOrder()
+    {
+        FirebaseDatabase.DefaultInstance.GetReference("Title").OrderByValue().GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            { // 성공적으로 데이터를 가져왔으면
+                DataSnapshot snapshot = task.Result;
+                // 데이터를 출력하고자 할때는 Snapshot 객체 사용함
+                Debug.Log(snapshot.GetRawJsonValue());
+
+                // foreach (DataSnapshot data in snapshot.Children)
+                // {
+                //     IDictionary rank = (IDictionary)data.Value;
+                //     Debug.Log("이름: " + rank["FITMOS"]);
+                //     // JSON은 사전 형태이기 때문에 딕셔너리 형으로 변환
+                // }
+            }
+        });
     }
 }

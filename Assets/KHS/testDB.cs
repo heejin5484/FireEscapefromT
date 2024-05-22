@@ -7,7 +7,9 @@ public class testDB : MonoBehaviour
     // Start is called before the first frame update
     public void getTitle()
     {
-        DBRepository.Instance.checkTitle();
+        // DBRepository.Instance.testOrder();
+        DBRepository.Instance.selectDate();
+        DBRepository.Instance.selectRank();
     }
 
     public void getTestFireExtinguisher()
@@ -20,6 +22,7 @@ public class testDB : MonoBehaviour
     public void checkLoginTitle()
     {
         // Debug.Log(TitleSingleManager.Instance.FISM);
-        DBRepository.Instance.saveDB();
+        long tempInt = 12345;
+        DBRepository.Instance.saveDB(tempInt);
     }
 }
