@@ -82,7 +82,7 @@ public class ItemUse : MonoBehaviour
                 StartCoroutine(RedFadeInOutforBadEnding());
                 //Debug.Log("Áê±Ý");
             }
-            else if (hit.transform == trigger)
+            else if (hit.transform.tag == "water")
             {
                 water.gameObject.SetActive(true);
                 //Debug.Log("¹° Ã¤¿öÁü");
