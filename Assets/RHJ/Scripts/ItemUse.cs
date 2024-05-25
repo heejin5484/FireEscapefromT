@@ -29,6 +29,7 @@ public class ItemUse : MonoBehaviour
     public bool item_used = false; // 한번 사용한것 못사용하게 하는 용도
     public bool FE_opened = false; // 소화기 안전핀 해제되었는지 체크 
     [SerializeField] FEClickParticleSystem fEClickParticleSystem;
+    [SerializeField] GameObject tempui;
 
     public void Use(ItemType type)
     {
@@ -103,6 +104,9 @@ public class ItemUse : MonoBehaviour
             {
                 water.gameObject.SetActive(false);
                 //Debug.Log("물 사용");
+                //나중에 지우기
+                tempui.SetActive(true);
+
             }
         }       
         

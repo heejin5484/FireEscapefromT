@@ -46,7 +46,7 @@ public class GameMenu: MonoBehaviour
     void Update()
     {}
     public void goLogin(){
-      SceneManager.LoadScene("Login");
+      SceneManager.LoadScene("LoginMain");
     }
 
     public void onLogout(){
@@ -59,6 +59,6 @@ public class GameMenu: MonoBehaviour
       SceneManager.LoadScene("title");
     }
     public void goGame(){
-      SceneManager.LoadScene("testDB");
+      SceneManager.LoadScene("temp");
     }
 }
