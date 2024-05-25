@@ -4,7 +4,6 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 
-
 public class Score
 {
     long score;
@@ -120,8 +119,11 @@ public class DBRepository : MonoBehaviour
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
+        Firebase.Auth.FirebaseUser user2 = auth.CurrentUser;
+
         reference.Child("Title").Child(loginUserID).SetRawJsonValueAsync(json);
         reference.Child("Score").Child(loginUserID).SetValueAsync(score);
+
     }
 
     public void logoutTitleDB()
@@ -161,6 +163,8 @@ public class DBRepository : MonoBehaviour
             foreach (var recode in args.Snapshot.Children)
             {
                 Debug.Log(recode.Key);
+                // UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(recode.Key);
+                // Debug.Log(userRecord);
                 // user2 = auth.GetUserAsync(recode.Key).Result;
                 // if (user2 != null)
                 // {
