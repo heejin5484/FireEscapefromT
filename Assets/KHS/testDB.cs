@@ -22,7 +22,7 @@ public class testDB : MonoBehaviour
     public void checkLoginTitle()
     {
         // Debug.Log(TitleSingleManager.Instance.FISM);
-        long tempInt = 12345;
+        long tempInt = 12346;
         DBRepository.Instance.saveDB(tempInt);
     }
 }

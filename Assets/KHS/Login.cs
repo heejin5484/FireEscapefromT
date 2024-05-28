@@ -32,9 +32,10 @@ public class Login : MonoBehaviour
     [SerializeField] InputField emailField;
     [SerializeField] InputField passwordField;
     Firebase.Auth.FirebaseAuth auth;
+    Firebase.Auth.FirebaseUser user;
     // Start is called before the first frame update
     [SerializeField] Button LoginButton;
-    
+
     private Queue<string> qq = new Queue<string>();
     public GameObject popup;
 
@@ -66,7 +67,8 @@ public class Login : MonoBehaviour
             }
             else
             {
-                DBRepository.Instance.loginTitleDB(sstemp);
+                user = auth.CurrentUser;
+                DBRepository.Instance.loginTitleDB(sstemp, user.Email);
                 SceneManager.LoadScene("GameMenu");
             }
         }
@@ -119,7 +121,7 @@ public class Login : MonoBehaviour
             // qq.Enqueue("로그인성공");
             qq.Enqueue(result.User.UserId);
             SceneManager.LoadScene("GameMenu");
-            
+
         });
     }
 
