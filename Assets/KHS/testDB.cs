@@ -9,7 +9,7 @@ public class testDB : MonoBehaviour
     {
         // DBRepository.Instance.testOrder();
         DBRepository.Instance.selectDate();
-        DBRepository.Instance.selectRank();
+        // DBRepository.Instance.selectRank();
     }
 
     public void getTestFireExtinguisher()
@@ -22,7 +22,7 @@ public class testDB : MonoBehaviour
     public void checkLoginTitle()
     {
         // Debug.Log(TitleSingleManager.Instance.FISM);
-        long tempInt = 12345;
+        long tempInt = 12346;
         DBRepository.Instance.saveDB(tempInt);
     }
 }

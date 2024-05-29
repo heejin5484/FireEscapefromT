@@ -29,7 +29,7 @@ public class ItemUse : MonoBehaviour
     public bool item_used = false; // 한번 사용한것 못사용하게 하는 용도
     public bool FE_opened = false; // 소화기 안전핀 해제되었는지 체크 
     [SerializeField] FEClickParticleSystem fEClickParticleSystem;
-    [SerializeField] GameObject tempui;
+    //[SerializeField] GameObject tempui;
 
     public void Use(ItemType type)
     {
@@ -105,7 +105,7 @@ public class ItemUse : MonoBehaviour
                 water.gameObject.SetActive(false);
                 //Debug.Log("물 사용");
                 //나중에 지우기
-                tempui.SetActive(true);
+                //tempui.SetActive(true);
 
             }
         }       
@@ -177,8 +177,8 @@ public class ItemUse : MonoBehaviour
         }
 
         // BadEnding 1 : Electirc shock ending
-
-        ScoreManager.Instance.PlayerViewedEnding(1);
+        StateManager.Instance.SetMinus();
+        ScoreManager.Instance.PlayerViewedEnding(6);
 
         //Time.timeScale = 1f; // 3초가 지난 후에 원래대로 시간을 다시 흐르게 설정 나중에 여기서 엔딩씬으로 보내기
         
