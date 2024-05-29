@@ -9,7 +9,7 @@ public class testDB : MonoBehaviour
     {
         // DBRepository.Instance.testOrder();
         DBRepository.Instance.selectDate();
-        DBRepository.Instance.selectRank();
+        // DBRepository.Instance.selectRank();
     }
 
     public void getTestFireExtinguisher()

@@ -12,17 +12,17 @@ public class GameMenu : MonoBehaviour
   // Start is called before the first frame update
   Firebase.Auth.FirebaseUser user;
   Firebase.Auth.FirebaseAuth auth;
-
+  public GameObject popup;
 
   void Start()
   {
-
     auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     user = auth.CurrentUser;
-
+    popup.gameObject.SetActive(false);
     if (user != null)
     {
       LoginButton.gameObject.SetActive(false);
+
       //     foreach (var profile in user.ProviderData) {
       //       // Id of the provider (ex: google.com)
       //    string  providerId = profile.ProviderId;
@@ -36,7 +36,7 @@ public class GameMenu : MonoBehaviour
       // Debug.Log(email);
 
 
-      // }
+      // }  
     }
     else
     {
@@ -55,13 +55,19 @@ public class GameMenu : MonoBehaviour
   public void onLogout()
   {
     auth.SignOut();
+    DBRepository.Instance.logoutTitleDB();
     LoginButton.gameObject.SetActive(true);
     LogoutButton.gameObject.SetActive(false);
   }
 
   public void goTitle()
   {
-    SceneManager.LoadScene("title");
+    if (auth.CurrentUser == null)
+    {
+      popup.gameObject.SetActive(true);
+    }
+    else
+      SceneManager.LoadScene("title");
   }
   public void goGame()
   {
@@ -69,6 +75,15 @@ public class GameMenu : MonoBehaviour
   }
   public void goRank()
   {
-    SceneManager.LoadScene("Rank");
+    if (auth.CurrentUser == null)
+    {
+      popup.gameObject.SetActive(true);
+    }
+    else
+      SceneManager.LoadScene("Rank");
+  }
+  public void offpopup()
+  {
+    popup.gameObject.SetActive(false);
   }
 }

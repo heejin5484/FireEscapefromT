@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using System;
 
 public class Score
 {
@@ -157,6 +158,10 @@ public class DBRepository : MonoBehaviour
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(userId).SetRawJsonValueAsync(json);
+
+        // Score score1 = new Score(auth.CurrentUser.Email, 0);
+        // string json2 = JsonUtility.ToJson(score1);
+        // reference.Child("Score").Child(loginUserID).SetRawJsonValueAsync(json2);
         // Score score = new Score()
         // string json = JsonUtility.ToJson(TitleSingleManager.Instance);
     }
@@ -165,7 +170,7 @@ public class DBRepository : MonoBehaviour
     {
         rankObject = GameObject.Find("RankObject");
         DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Score");
-        Query titleQuery = tempreference.OrderByChild("score").LimitToLast(9);
+        Query titleQuery = tempreference.OrderByChild("score").LimitToLast(10);
         titleQuery.ValueChanged += HandleValueChanged2;
     }
 
@@ -173,7 +178,7 @@ public class DBRepository : MonoBehaviour
     {
         string[] emailArr = new string[10];
         long[] scoreArr = new long[10];
-        int id = 8;
+        int id = 9;
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message);
@@ -227,7 +232,8 @@ public class DBRepository : MonoBehaviour
     public void selectMyRank()
     {
         rankObject = GameObject.Find("RankObject");
-
+        rankObject.GetComponent<Rank>().email[9].text = "<color=orange>" + loginUserEmail + "</color>";
+        rankObject.GetComponent<Rank>().score[9].text = "<color=orange>" + 0 + "</color>";
         FirebaseDatabase.DefaultInstance.GetReference("Score").GetValueAsync().ContinueWith(task =>
        {
            if (task.IsCompleted)
@@ -244,7 +250,7 @@ public class DBRepository : MonoBehaviour
                        IDictionary rank = (IDictionary)data.Value;
                        //    Debug.Log(loginUserID);
                        myRank.Enqueue(rank);
-
+                       break;
                    }
                    // JSON은 사전 형태이기 때문에 딕셔너리 형으로 변환
                }

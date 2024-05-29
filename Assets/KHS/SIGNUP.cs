@@ -60,7 +60,7 @@ public class SGINUP : MonoBehaviour
             else
             {
                 DBRepository.Instance.signupDBTile(sstemp);
-                SceneManager.LoadScene("Login");
+                SceneManager.LoadScene("LoginMain");
             }
         }
 
@@ -91,7 +91,8 @@ public class SGINUP : MonoBehaviour
 
     public void onSingup()
     {
-        if(CHECK.text != passField.text){
+        if (CHECK.text != passField.text)
+        {
             qq.Enqueue("회원가입실패");
             return;
         }
@@ -118,12 +119,13 @@ public class SGINUP : MonoBehaviour
         popup.gameObject.SetActive(true);
     }
 
-    public void offpopup(){
+    public void offpopup()
+    {
         popup.gameObject.SetActive(false);
     }
 
     public void loadLogin()
     {
-        SceneManager.LoadScene("Login");
+        SceneManager.LoadScene("LoginMain");
     }
 }
