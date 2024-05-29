@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
-
+using System;
 
 public class Score
 {
-    long score;
-    public Score(long score)
+    public long score;
+    public string email;
+    public Score(string email, long score)
     {
+        this.email = email;
         this.score = score;
     }
 }
@@ -17,10 +19,12 @@ public class Score
 public class DBRepository : MonoBehaviour
 {
     // public static DBRepository Instance = null;
-
+    GameObject rankObject;
     private Queue<IDictionary> qq = new Queue<IDictionary>();
+    private Queue<IDictionary> myRank = new Queue<IDictionary>();
     Firebase.Auth.FirebaseAuth auth;
     DatabaseReference reference;
+
     private static DBRepository _instance;
     public static DBRepository Instance
     {
@@ -39,6 +43,7 @@ public class DBRepository : MonoBehaviour
         }
     }
     string loginUserID;
+    string loginUserEmail;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +76,16 @@ public class DBRepository : MonoBehaviour
             string json = JsonUtility.ToJson(TitleSingleManager.Instance);
             Debug.Log(json);
         }
+        if (myRank.Count > 0)
+        {
+            IDictionary rank = myRank.Dequeue();
+            string email = (string)rank["email"];
+            long score = (long)rank["score"];
+            Debug.Log(email);
+            Debug.Log(score);
+            rankObject.GetComponent<Rank>().email[9].text = "<color=orange>" + email + "</color>";
+            rankObject.GetComponent<Rank>().score[9].text = "<color=orange>" + score + "</color>";
+        }
     }
     public void checkTitle()
     {
@@ -91,9 +106,10 @@ public class DBRepository : MonoBehaviour
         });
     }
 
-    public void loginTitleDB(string userId)
+    public void loginTitleDB(string userId, string userEmail)
     {
         this.loginUserID = userId;
+        this.loginUserEmail = userEmail;
         FirebaseDatabase.DefaultInstance.GetReference("Title").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCompleted)
@@ -120,13 +136,18 @@ public class DBRepository : MonoBehaviour
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
+        Score score1 = new Score(loginUserEmail, score);
+        Debug.Log(score1.email);
+        string json2 = JsonUtility.ToJson(score1);
+        Debug.Log(json2);
         reference.Child("Title").Child(loginUserID).SetRawJsonValueAsync(json);
-        reference.Child("Score").Child(loginUserID).SetValueAsync(score);
+        reference.Child("Score").Child(loginUserID).SetRawJsonValueAsync(json2);
     }
 
     public void logoutTitleDB()
     {
         loginUserID = null;
+        loginUserEmail = null;
         TitleSingleManager.Instance.setTitle(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
@@ -137,19 +158,27 @@ public class DBRepository : MonoBehaviour
         string json = JsonUtility.ToJson(TitleSingleManager.Instance);
         Debug.Log(json);
         reference.Child("Title").Child(userId).SetRawJsonValueAsync(json);
+
+        // Score score1 = new Score(auth.CurrentUser.Email, 0);
+        // string json2 = JsonUtility.ToJson(score1);
+        // reference.Child("Score").Child(loginUserID).SetRawJsonValueAsync(json2);
         // Score score = new Score()
         // string json = JsonUtility.ToJson(TitleSingleManager.Instance);
     }
 
     public void selectRank()
     {
+        rankObject = GameObject.Find("RankObject");
         DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Score");
-        Query titleQuery = tempreference.OrderByChild("score").LimitToFirst(10);
+        Query titleQuery = tempreference.OrderByChild("score").LimitToLast(10);
         titleQuery.ValueChanged += HandleValueChanged2;
     }
 
     private async void HandleValueChanged2(object sender, ValueChangedEventArgs args)
     {
+        string[] emailArr = new string[10];
+        long[] scoreArr = new long[10];
+        int id = 9;
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message);
@@ -160,7 +189,9 @@ public class DBRepository : MonoBehaviour
             Firebase.Auth.FirebaseUser user2;
             foreach (var recode in args.Snapshot.Children)
             {
-                Debug.Log(recode.Key);
+                // Debug.Log(recode.Key);
+                // UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(recode.Key);
+                // Debug.Log(userRecord);
                 // user2 = auth.GetUserAsync(recode.Key).Result;
                 // if (user2 != null)
                 // {
@@ -168,10 +199,65 @@ public class DBRepository : MonoBehaviour
                 //     string email = user2.Email;
                 //     Debug.Log(email);
                 // }
-                Debug.Log(recode.GetRawJsonValue());
+                // Debug.Log(recode.Value);
+                IDictionary rank = (IDictionary)recode.Value;
+                // Debug.Log(rank["email"]);
+                emailArr[id] = (string)rank["email"];
+                scoreArr[id--] = (long)rank["score"];
+                // Debug.Log(scoreArr[id--]);
+
+                // Debug.Log(recode.GetRawJsonValue());
             }
         }
+        // rankObject.GetComponent<Rank>().email[9].text = emailArr[9];
+        for (int i = 0; i < emailArr.Length; i++)
+        {
+            // Debug.Log(emailArr[i]);
+            // Debug.Log(scoreArr[i]);
+            if (loginUserEmail == emailArr[i])
+            {
+                // Debug.Log(loginUserEmail);
+                rankObject.GetComponent<Rank>().email[i].text = "<color=orange>" + emailArr[i] + "</color>";
+                rankObject.GetComponent<Rank>().score[i].text = "<color=orange>" + scoreArr[i] + "</color>";
+            }
+            else
+            {
+                rankObject.GetComponent<Rank>().email[i].text = emailArr[i];
+                rankObject.GetComponent<Rank>().score[i].text = scoreArr[i] + "";
+            }
+
+        }
     }
+
+    public void selectMyRank()
+    {
+        rankObject = GameObject.Find("RankObject");
+        rankObject.GetComponent<Rank>().email[9].text = "<color=orange>" + loginUserEmail + "</color>";
+        rankObject.GetComponent<Rank>().score[9].text = "<color=orange>" + 0 + "</color>";
+        FirebaseDatabase.DefaultInstance.GetReference("Score").GetValueAsync().ContinueWith(task =>
+       {
+           if (task.IsCompleted)
+           { // 성공적으로 데이터를 가져왔으면
+               DataSnapshot snapshot = task.Result;
+               // 데이터를 출력하고자 할때는 Snapshot 객체 사용함
+               //    Debug.Log(snapshot);
+               foreach (DataSnapshot data in snapshot.Children)
+               {
+
+                   //    Debug.Log(data);
+                   if (data.Key == loginUserID)
+                   {
+                       IDictionary rank = (IDictionary)data.Value;
+                       //    Debug.Log(loginUserID);
+                       myRank.Enqueue(rank);
+                       break;
+                   }
+                   // JSON은 사전 형태이기 때문에 딕셔너리 형으로 변환
+               }
+           }
+       });
+    }
+
     public void selectDate()
     {
         DatabaseReference tempreference = FirebaseDatabase.DefaultInstance.GetReference("Title");

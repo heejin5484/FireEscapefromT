@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44454437, g: 0.49404544, b: 0.5733301, a: 1}
+  m_IndirectSpecularColor: {r: 0.44454435, g: 0.49404532, b: 0.57332987, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5698,7 +5698,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1690294358}
         m_TargetAssemblyTypeName: Login, Assembly-CSharp
         m_MethodName: offpopup
         m_Mode: 1
@@ -9325,7 +9325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 229.99998, y: -149.00002}
+  m_AnchoredPosition: {x: 94.999985, y: -73.000015}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203127209
@@ -11360,7 +11360,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 54.999985, y: -149.00002}
+  m_AnchoredPosition: {x: -80.000015, y: -73.000015}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243967122
@@ -62090,8 +62090,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD64D\uC775\uB300\uD559\uAD50"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8737e9c15374c6745976a24ddd75ab0c, type: 2}
-  m_sharedMaterial: {fileID: 2406204017439882590, guid: 8737e9c15374c6745976a24ddd75ab0c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -62180,7 +62180,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2406204017439882590, guid: 8737e9c15374c6745976a24ddd75ab0c, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -62239,7 +62239,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 142, y: -31}
+  m_AnchoredPosition: {x: 7, y: 45}
   m_SizeDelta: {x: 350, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1445042610
@@ -63398,7 +63398,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 141.99998, y: -92.000015}
+  m_AnchoredPosition: {x: 6.9999847, y: -16.000015}
   m_SizeDelta: {x: 350, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1459559388
@@ -73301,7 +73301,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1690294359}
   - component: {fileID: 1690294358}
-  - component: {fileID: 1690294357}
   m_Layer: 0
   m_Name: EventManager
   m_TagString: Untagged
@@ -73309,28 +73308,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1690294357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690294356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dab1f9af49210446b8d44f5deab97a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FE_first_use: 0
-  T_Fire_fighter: 0
-  FE_use: 0
-  FE_all_use: 0
-  first_bucket: 0
-  bucket_success: 0
-  handkerchief_use: 0
-  swift_evacuation: 0
-  safe_evacuation: 0
-  FITMOS: 0
 --- !u!114 &1690294358
 MonoBehaviour:
   m_ObjectHideFlags: 0
