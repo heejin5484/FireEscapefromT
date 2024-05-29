@@ -63,51 +63,144 @@ public class TitleSingleManager : MonoBehaviour
         this.FITMOS = FITMOS;
     }
 
-    public void setFE_first_use()
+    public bool setFE_first_use()
     {
-        this.FE_first_use++;
+        if (FE_first_use == 0)
+        {
+            FE_first_use = 1;
+            return true;
+        }
+        return false;
     }
-    public void setT_Fire_fighter()
+    public bool setT_Fire_fighter()
     {
-        this.T_Fire_fighter++;
-    }
-
-    public void setFE_use()
-    {
-        this.FE_use++;
-    }
-    public void setFE_all_use()
-    {
-        this.FE_all_use++;
-    }
-
-    public void setfirst_bucket()
-    {
-        this.first_bucket++;
+        if (T_Fire_fighter == 0)
+        {
+            T_Fire_fighter = 1;
+            return true;
+        }
+        return false;
     }
 
-    public void setbucket_success()
+    public bool setFE_use()
     {
-        this.bucket_success++;
+        if (FE_use == 0)
+        {
+            FE_use = 1;
+            return true;
+        }
+        return false;
+    }
+    public bool setFE_all_use()
+    {
+        if (FE_all_use == 0)
+        {
+            FE_all_use = 1;
+            return true;
+        }
+        return false;
     }
 
-    public void sethandkerchief_use()
+    public bool setfirst_bucket()
     {
-        this.handkerchief_use++;
+        if (first_bucket == 0)
+        {
+            first_bucket = 1;
+            return true;
+        }
+        return false;
     }
 
-    public void setswift_evacuation()
+    public bool setbucket_success()
     {
-        this.swift_evacuation++;
+        if (bucket_success == 0)
+        {
+            bucket_success = 1;
+            return true;
+        }
+        return false;
     }
 
-    public void setsafe_evacuation()
+    public bool sethandkerchief_use()
     {
-        this.safe_evacuation++;
+        if (handkerchief_use == 0)
+        {
+            handkerchief_use = 1;
+            return true;
+        }
+        return false;
     }
-    public void setFITMOS()
+
+    public bool setswift_evacuation()
     {
-        this.FITMOS++;
+        if (swift_evacuation == 0)
+        {
+            swift_evacuation = 1;
+            return true;
+        }
+        return false;
+    }
+
+    public bool setsafe_evacuation()
+    {
+        if (safe_evacuation == 0)
+        {
+            safe_evacuation = 1;
+            return true;
+        }
+        return false;
+    }
+    public bool setFailBucket()
+    {
+        if ((FITMOS & (long)0001 << 3) == 0)
+        {
+            Debug.Log(1 << 2);
+            FITMOS = FITMOS | 1000;
+            if (FITMOS == 15)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool setFailOxygen()
+    {
+        if ((FITMOS & (0001 << 2)) == 0)
+        {
+            FITMOS |= 0100;
+            if (FITMOS == 15)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool setFailFire()
+    {
+        if ((FITMOS & (0001 << 1)) == 0)
+        {
+            FITMOS = FITMOS | 0010;
+            if (FITMOS == 15)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool setFailElevator()
+    {
+        if ((FITMOS & (0001 << 0)) == 0)
+        {
+            FITMOS = FITMOS | 0001;
+            if (FITMOS == 15)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     // Start is called before the first frame update
     void Start()

@@ -5,60 +5,85 @@ using Firebase.Auth;
 using Firebase.Database;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class GameMenu: MonoBehaviour
+public class GameMenu : MonoBehaviour
 {
-    [SerializeField] Button LoginButton;
-    [SerializeField] Button LogoutButton;
-    // Start is called before the first frame update
-    Firebase.Auth.FirebaseUser user;
-    Firebase.Auth.FirebaseAuth auth;
-     
-    
-    void Start()
+  [SerializeField] Button LoginButton;
+  [SerializeField] Button LogoutButton;
+  // Start is called before the first frame update
+  Firebase.Auth.FirebaseUser user;
+  Firebase.Auth.FirebaseAuth auth;
+  public GameObject popup;
+
+  void Start()
+  {
+    auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+    user = auth.CurrentUser;
+    popup.gameObject.SetActive(false);
+    if (user != null)
     {
-  
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        user = auth.CurrentUser;
-        
-         if (user != null) {
-                   LoginButton.gameObject.SetActive(false);
-        //     foreach (var profile in user.ProviderData) {
-        //       // Id of the provider (ex: google.com)
-        //    string  providerId = profile.ProviderId;
-        //     string uid = profile.UserId;
-        //      Debug.Log(uid);
-        //          string name = profile.DisplayName;
-        // string email = profile.Email;
+      LoginButton.gameObject.SetActive(false);
 
-        // Debug.Log(providerId);
-        // Debug.Log(name);
-        // Debug.Log(email);
-    
-       
-  // }
-    }
-    else{
+      //     foreach (var profile in user.ProviderData) {
+      //       // Id of the provider (ex: google.com)
+      //    string  providerId = profile.ProviderId;
+      //     string uid = profile.UserId;
+      //      Debug.Log(uid);
+      //          string name = profile.DisplayName;
+      // string email = profile.Email;
 
-          LogoutButton.gameObject.SetActive(false);
-    }
-    }
-    // Update is called once per frame
-    void Update()
-    {}
-    public void goLogin(){
-      SceneManager.LoadScene("LoginMain");
-    }
+      // Debug.Log(providerId);
+      // Debug.Log(name);
+      // Debug.Log(email);
 
-    public void onLogout(){
-      auth.SignOut();
-      LoginButton.gameObject.SetActive(true);
+
+      // }  
+    }
+    else
+    {
+
       LogoutButton.gameObject.SetActive(false);
     }
+  }
+  // Update is called once per frame
+  void Update()
+  { }
+  public void goLogin()
+  {
+    SceneManager.LoadScene("LoginMain");
+  }
 
-    public void goTitle(){
+  public void onLogout()
+  {
+    auth.SignOut();
+    DBRepository.Instance.logoutTitleDB();
+    LoginButton.gameObject.SetActive(true);
+    LogoutButton.gameObject.SetActive(false);
+  }
+
+  public void goTitle()
+  {
+    if (auth.CurrentUser == null)
+    {
+      popup.gameObject.SetActive(true);
+    }
+    else
       SceneManager.LoadScene("title");
+  }
+  public void goGame()
+  {
+    SceneManager.LoadScene("testDB");
+  }
+  public void goRank()
+  {
+    if (auth.CurrentUser == null)
+    {
+      popup.gameObject.SetActive(true);
     }
-    public void goGame(){
-      SceneManager.LoadScene("temp");
-    }
+    else
+      SceneManager.LoadScene("Rank");
+  }
+  public void offpopup()
+  {
+    popup.gameObject.SetActive(false);
+  }
 }
