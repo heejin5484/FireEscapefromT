@@ -71,7 +71,7 @@ public class GameMenu : MonoBehaviour
   }
   public void goGame()
   {
-    SceneManager.LoadScene("testDB");
+    SceneManager.LoadScene("temp");
   }
   public void goRank()
   {
