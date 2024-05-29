@@ -15,6 +15,21 @@ public class StateManager : MonoBehaviour
     [SerializeField, Range(0, 100)]
     private float maxGas = 100f;
 
+    [SerializeField]
+    private GameObject objectToActivate;
+
+    private bool conditionMet = false;
+
+    void Awake()
+    {
+        // Non-Lazy DDOL Singleton
+        if (FindObjectsOfType(GetType()).Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+    }
     //Singleton
     private static StateManager _Instance;
     public static StateManager Instance
@@ -29,9 +44,15 @@ public class StateManager : MonoBehaviour
         }
     }
 
+   
     private void Start()
     {
         InitializeStates();
+    }
+
+    private void Update()
+    {
+        CheckConditionsAndActivateObject();
     }
 
     private void InitializeStates()
@@ -70,5 +91,25 @@ public class StateManager : MonoBehaviour
     public int ReturnGas()
     {
         return (int)gas;
+    }
+
+    private void CheckConditionsAndActivateObject()
+    {
+        if ((hp <= 0 || oxygen <= 0 || gas >= 100) && !conditionMet)
+        {
+            conditionMet = true;
+            SetMinus();
+
+            if (objectToActivate != null)
+            {
+                objectToActivate.SetActive(true);
+            }
+        }
+    }
+    public void SetMinus()
+    {
+        hp -= 20;
+        oxygen -= 20;
+        gas += 20;
     }
 }
